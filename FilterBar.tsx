@@ -162,7 +162,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
                         )}
                         {searchTerm && (
                             <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                                {searchTerm}
+                                "{searchTerm}"
                             </span>
                         )}
                         <button
@@ -179,4 +179,5 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
 };
 
 export default FilterBar;
+
 
