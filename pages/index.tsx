@@ -143,7 +143,7 @@ export default function Landing() {
                 </div>
               </Link>
 
-              <Link href="/">
+              <Link href="/research">
                 <div className="relative rounded-xl bg-white shadow-md hover:shadow-xl transition overflow-hidden h-[160px] group">
                   <div className="absolute inset-0 bg-gradient-to-br from-[#5b171e]/5 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
                   <div className="relative p-4 h-full flex flex-col justify-between">

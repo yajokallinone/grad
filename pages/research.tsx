@@ -1,53 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
-export default function Research() {
-    const researchCenters = [
-        {
-            name: 'ศูนย์วิจัยวิศวกรรมโยธาและโครงสร้างพื้นฐาน',
-            name_en: 'Civil Engineering and Infrastructure Research Center',
-            department: 'ภาควิชาวิศวกรรมโยธา',
-            description: 'งานวิจัยด้านโครงสร้าง วัสดุก่อสร้าง และระบบโครงสร้างพื้นฐาน',
-            icon: '🏗️',
-        },
-        {
-            name: 'ศูนย์วิจัยพลังงานและสิ่งแวดล้อม',
-            name_en: 'Energy and Environment Research Center',
-            department: 'ภาควิชาวิศวกรรมเครื่องกล',
-            description: 'พลังงานทดแทน ประสิทธิภาพพลังงาน และสิ่งแวดล้อม',
-            icon: '⚡',
-        },
-        {
-            name: 'ศูนย์วิจัยปัญญาประดิษฐ์และวิทยาการข้อมูล',
-            name_en: 'AI and Data Science Research Center',
-            department: 'ภาควิชาวิศวกรรมคอมพิวเตอร์',
-            description: 'Machine Learning, Deep Learning, Big Data และ AI Applications',
-            icon: '🤖',
-        },
-        {
-            name: 'ศูนย์วิจัยระบบอัตโนมัติและหุ่นยนต์',
-            name_en: 'Automation and Robotics Research Center',
-            department: 'ภาควิชาวิศวกรรมไฟฟ้า',
-            description: 'ระบบควบคุมอัตโนมัติ หุ่นยนต์อุตสาหกรรม และ IoT',
-            icon: '🤖',
-        },
-        {
-            name: 'ศูนย์วิจัยโลจิสติกส์และซัพพลายเชน',
-            name_en: 'Logistics and Supply Chain Research Center',
-            department: 'ภาควิชาวิศวกรรมอุตสาหการ',
-            description: 'การจัดการโซ่อุปทาน ระบบโลจิสติกส์ และการเพิ่มประสิทธิภาพ',
-            icon: '📦',
-        },
-        {
-            name: 'ศูนย์วิจัยทรัพยากรธรณีและสิ่งแวดล้อม',
-            name_en: 'Georesources and Environment Research Center',
-            department: 'ภาควิชาวิศวกรรมเหมืองแร่และปิโตรเลียม',
-            description: 'การสำรวจทรัพยากร การจัดการสิ่งแวดล้อม และความยั่งยืน',
-            icon: '⛏️',
-        },
-    ];
+interface Project {
+    advisor: string;
+    project_name: string;
+}
 
+export default function Research() {
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [dbStatus, setDbStatus] = useState<any>(null);
+    const [testingDb, setTestingDb] = useState(false);
+
+    useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    const fetchProjects = async () => {
+        try {
+            const response = await fetch('/api/projects');
+            if (!response.ok) {
+                throw new Error('Failed to fetch projects');
+            }
+            const data = await response.json();
+            setProjects(data);
+        } catch (err) {
+            setError((err as Error).message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const testDatabase = async () => {
+        setTestingDb(true);
+        try {
+            const response = await fetch('/api/test-db');
+            const data = await response.json();
+            setDbStatus(data);
+        } catch (err) {
+            setDbStatus({
+                success: false,
+                message: 'ไม่สามารถเชื่อมต่อได้',
+                error: (err as Error).message
+            });
+        } finally {
+            setTestingDb(false);
+        }
+    };
+
+    
     return (
         <>
             <Head>
@@ -55,60 +58,146 @@ export default function Research() {
                 <meta name="description" content="ศูนย์วิจัย ห้องปฏิบัติการ และโครงการวิจัย" />
             </Head>
 
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-white">
                 {/* Header */}
-                <header className="bg-white shadow-sm border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <header className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg">
+                    <div className="max-w-7xl mx-auto px-6 py-6">
                         <div className="flex items-center justify-between">
-                            <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-indigo-600 transition-colors">
-                                🎓 บัณฑิตศึกษา
-                            </Link>
-                            <Link href="/" className="text-sm text-gray-600 hover:text-indigo-600 transition-colors">
-                                ← กลับหน้าหลัก
+                            <div>
+                                <h1 className="text-2xl font-semibold text-white mb-1">โครงการวิจัยบัณฑิตศึกษา</h1>
+                                <p className="text-blue-100 text-sm">คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเชียงใหม่</p>
+                            </div>
+                            <Link href="/" className="text-white hover:text-blue-200 transition-colors text-sm font-medium">
+                                กลับหน้าหลัก
                             </Link>
                         </div>
                     </div>
                 </header>
 
-                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    {/* Page Title */}
-                    <div className="mb-12">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">🔬 งานวิจัย</h1>
-                        <p className="text-lg text-gray-600">
-                            ศูนย์วิจัย ห้องปฏิบัติการ และโครงการวิจัยของคณะวิศวกรรมศาสตร์
-                        </p>
+                <main className="max-w-7xl mx-auto px-6 py-8">
+                    {/* Search and Test Section */}
+                    <div className="mb-8 flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-xl font-semibold text-gray-800">รายการโครงการวิจัย</h2>
+                            {!loading && !error && (
+                                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                    ทั้งหมด {projects.length} โครงการ
+                                </span>
+                            )}
+                        </div>
+                        <button
+                            onClick={testDatabase}
+                            disabled={testingDb}
+                            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:bg-gray-100 transition-colors text-sm font-medium flex items-center gap-2"
+                        >
+                            {testingDb ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent"></div>
+                                    <span>กำลังทดสอบ...</span>
+                                </>
+                            ) : (
+                                <span>ทดสอบการเชื่อมต่อ</span>
+                            )}
+                        </button>
                     </div>
 
-                    {/* Research Centers */}
-                    <div className="space-y-6">
-                        {researchCenters.map((center, index) => (
-                            <div key={index} className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
-                                <div className="flex items-start">
-                                    <div className="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                                        <span className="text-3xl">{center.icon}</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-1">{center.name}</h3>
-                                        <p className="text-sm text-gray-600 mb-2">{center.name_en}</p>
-                                        <p className="text-sm text-indigo-600 font-medium mb-3">{center.department}</p>
-                                        <p className="text-gray-700">{center.description}</p>
-                                    </div>
+                    {/* Database Status */}
+                    {dbStatus && (
+                        <div className={`mb-6 p-4 rounded-md border-l-4 ${
+                            dbStatus.success 
+                                ? 'bg-green-50 border-green-500' 
+                                : 'bg-red-50 border-red-500'
+                        }`}>
+                            <div className="flex items-start gap-3">
+                                <div className="flex-1">
+                                    <p className={`font-medium ${
+                                        dbStatus.success ? 'text-green-900' : 'text-red-900'
+                                    }`}>
+                                        {dbStatus.message}
+                                    </p>
+                                    {dbStatus.connectionInfo && (
+                                        <div className="text-xs text-gray-600 mt-2 space-y-1">
+                                            <p>Host: {dbStatus.connectionInfo.host} | Database: {dbStatus.connectionInfo.database}</p>
+                                        </div>
+                                    )}
+                                    {!dbStatus.success && dbStatus.error && (
+                                        <p className="text-xs text-red-700 mt-2">{dbStatus.error}</p>
+                                    )}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-
-                    {/* Research Areas */}
-                    <div className="mt-16">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">สาขาวิจัยหลัก</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {['โครงสร้างและวัสดุ', 'พลังงานทดแทน', 'ปัญญาประดิษฐ์', 'ระบบอัตโนมัติ', 'โลจิสติกส์', 'สิ่งแวดล้อม', 'วัสดุศาสตร์', 'ระบบควบคุม', 'การจัดการอุตสาหกรรม'].map((area, index) => (
-                                <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
-                                    <p className="text-gray-900 font-medium">{area}</p>
-                                </div>
-                            ))}
                         </div>
-                    </div>
+                    )}
+                    
+                    {/* Loading State */}
+                    {loading && (
+                        <div className="flex flex-col justify-center items-center py-20">
+                            <div className="animate-spin rounded-full h-10 w-10 border-3 border-blue-900 border-t-transparent mb-4"></div>
+                            <p className="text-gray-500 text-sm">กำลังโหลดข้อมูล...</p>
+                        </div>
+                    )}
+
+                    {/* Error State */}
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
+                            <p className="text-red-800 font-medium">เกิดข้อผิดพลาด</p>
+                            <p className="text-red-600 text-sm mt-1">{error}</p>
+                        </div>
+                    )}
+
+                    {/* Projects Table */}
+                    {!loading && !error && (
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-20">
+                                                ลำดับ
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                                ชื่องานวิจัย
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-64">
+                                                อาจารย์ที่ปรึกษา
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {projects.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={3} className="px-6 py-12 text-center">
+                                                    <p className="text-gray-400">ไม่พบข้อมูลโครงการวิจัย</p>
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            projects.map((project, index) => (
+                                                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {index + 1}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                        {project.project_name || '-'}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-sm text-gray-700">
+                                                        {project.advisor || '-'}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Footer Info */}
+                    {!loading && !error && projects.length > 0 && (
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-gray-500">
+                                แสดงข้อมูลทั้งหมด {projects.length} โครงการ
+                            </p>
+                        </div>
+                    )}
                 </main>
             </div>
         </>

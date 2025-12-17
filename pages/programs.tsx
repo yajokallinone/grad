@@ -14,6 +14,7 @@ export default function Home() {
         searchTerm: '',
         plan: 'all',
         studyDay: 'all',
+        title: 'all',
     });
 
     const filteredPrograms = useMemo(() => {
@@ -29,6 +30,11 @@ export default function Home() {
 
             // Filter by major
             if (filters.major !== 'all' && program.major !== filters.major) {
+                return false;
+            }
+
+            // Filter by title
+            if (filters.title !== 'all' && program.title !== filters.title) {
                 return false;
             }
 
