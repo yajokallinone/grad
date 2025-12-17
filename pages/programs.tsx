@@ -112,7 +112,7 @@ export default function Home() {
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">ไม่พบโปรแกรมที่ตรงกับการค้นหา</h3>
                             <p className="text-gray-600 mb-4">ลองปรับตัวกรองหรือคำค้นหาของคุณ</p>
                             <button
-                                onClick={() => setFilters({ degree: 'all', major: 'all', searchTerm: '', plan: 'all', studyDay: 'all' })}
+                                onClick={() => setFilters({ degree: 'all', major: 'all', searchTerm: '', plan: 'all', studyDay: 'all' , title: 'all' })}
                                 className="px-6 py-2 bg-cmu-red text-white hover:bg-cmu-maroon transition-colors font-medium"
                             >
                                 ล้างตัวกรอง
